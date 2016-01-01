@@ -134,47 +134,71 @@ describe('Replay', () => {
     assert.isFunction(stream.replay);
   });
 
-  it('should behave transparently for the first observer', done => {
-    const append = (a, x) => a.concat(x);
-    const size = 5;
-    const s = most.iterate(function(x) { return x+1; }, 0).take(size).multicast();
+  it('foobar', () => {
+    var memoizedStream = most
+      .periodic(100, null)
+      .flatMap(x => most.just(Math.random()))
+      .take(5)
+      .replay();
 
-    var $ = most.iterate(function(x) { return x+1; }, 0).take(5).replay();
+    function observe(tag) {
+      return () => {
+        memoizedStream
+          .reduce((acc, x) => {
+            console.log(tag, x);
+            return acc.concat(x);
+          }, [])
+          .then(arr => console.log(tag, arr))
+          .catch(err => console.error(err));
+      };
+    }
 
-    function foo() {
-      $.map(() => $.reduce(append, []))
-      .reduce(append, [])
-      .then(function(arrayOfPromises) { return Promise.all(arrayOfPromises); })
-      .then(function(arrayOfArrays) {
-        console.log(arrayOfArrays);
-        // all arrays should be identical with replay,
-        // but different without it
-      });
-    };
-    foo();
-    // setTimeout(foo, 1);
-
-    // most.from(sequence(size))
-    //   .map(function() { return s.reduce(append, []); })
-    //   .reduce(append, [])
-    //   .then(arrayOfPromises => Promise.all(arrayOfPromises))
-    //   .then(function(arrayOfArrays) {
-    //     assert.lengthOf(arrayOfArrays, 5);
-    //     assert.lengthOf(arrayOfArrays[0], 5);
-    //     try {
-    //       for(var i = 1; i < arrayOfArrays.length; i++) {
-    //         const arr1 = arrayOfArrays[i-1];
-    //         const arr2 = arrayOfArrays[i];
-    //         assert.deepEqual(arr1, arr2, `array #${i-1} [${arr1}] not equal to array #${i} [${arr2}]`);
-    //       }
-    //       console.log('Output:', arrayOfArrays);
-    //       done();
-    //     }
-    //     catch(e) {
-    //       throw e;
-    //     }
-    //     // all arrays should be identical with replay,
-    //     // but different without it
-    //   });
+    observe('A')();
+    setTimeout(observe('B'), 250);
+    setTimeout(observe('C'), 1000);
   });
+
+  // it('should behave transparently for the first observer', done => {
+  //   const append = (a, x) => a.concat(x);
+  //   const size = 5;
+  //   const s = most.iterate(function(x) { return x+1; }, 0).take(size).multicast();
+  //
+  //   var $ = most.iterate(function(x) { return x+1; }, 0).take(5).replay();
+  //
+  //   function foo() {
+  //     $.map(() => $.reduce(append, []))
+  //     .reduce(append, [])
+  //     .then(function(arrayOfPromises) { return Promise.all(arrayOfPromises); })
+  //     .then(function(arrayOfArrays) {
+  //       console.log(arrayOfArrays);
+  //       // all arrays should be identical with replay,
+  //       // but different without it
+  //     });
+  //   };
+  //   foo();
+  //   // setTimeout(foo, 1);
+  //
+  //   // most.from(sequence(size))
+  //   //   .map(function() { return s.reduce(append, []); })
+  //   //   .reduce(append, [])
+  //   //   .then(arrayOfPromises => Promise.all(arrayOfPromises))
+  //   //   .then(function(arrayOfArrays) {
+  //   //     assert.lengthOf(arrayOfArrays, 5);
+  //   //     assert.lengthOf(arrayOfArrays[0], 5);
+  //   //     try {
+  //   //       for(var i = 1; i < arrayOfArrays.length; i++) {
+  //   //         const arr1 = arrayOfArrays[i-1];
+  //   //         const arr2 = arrayOfArrays[i];
+  //   //         assert.deepEqual(arr1, arr2, `array #${i-1} [${arr1}] not equal to array #${i} [${arr2}]`);
+  //   //       }
+  //   //       console.log('Output:', arrayOfArrays);
+  //   //       done();
+  //   //     }
+  //   //     catch(e) {
+  //   //       throw e;
+  //   //     }
+  //   //     // all arrays should be identical with replay,
+  //   //     // but different without it
+  //   //   });
+  // });
 });

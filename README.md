@@ -19,7 +19,7 @@ require('most-replay')(most); // Call only once, at the start of your applicatio
 
 var memoizedStream = most
   .periodic(100, null)
-  .map(x => most.just(Math.random()))
+  .flatMap(x => most.just(Math.random()))
   .take(5)
   .replay();
 
