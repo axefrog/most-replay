@@ -20,15 +20,17 @@ describe('Replay', () => {
   it('should behave transparently for the first observer', done => {
     const append = (a, x) => a.concat(x);
     const size = 5;
-    const stream = most.iterate(function(x) { return x+1; }, 0).take(size).replay();
+    const stream = most.iterate(function(x) { return x+1; }, 0).take(size).replay()
 
     stream.map(() => stream.reduce(append, []))
       .reduce(append, [])
-      .then(function(arrayOfPromises) { return Promise.all(arrayOfPromises); })
+      .then(arrayOfPromises => Promise.all(arrayOfPromises))
       .then(function(arrayOfArrays) {
-        console.log(arrayOfArrays);
-        // all arrays should be identical with replay,
-        // but different without it
+        arrayOfArrays.reduce((prev, curr) => {
+          assert.deepEqual(prev, curr)
+          return curr
+        })
+        done()
       });
   });
 });
