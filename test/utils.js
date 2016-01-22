@@ -43,17 +43,6 @@ export function TestScheduler() {
     flush();
   }
 
-  // for(let key of Object.keys(Scheduler.prototype)) {
-  //   console.log('KEY', key)
-  //   const f = Scheduler.prototype[key];
-  //   if(typeof f === 'function') {
-  //     Scheduler.prototype[key] = function() {
-  //       console.log('Scheduler.' + key);
-  //       return f.call(this, ...arguments);
-  //     }
-  //   }
-  // }
-
   const scheduler = new Scheduler(setTimer, clearTimer, now);
   scheduler.tick = tick;
   scheduler.collect = function(stream) {

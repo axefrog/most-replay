@@ -1,6 +1,6 @@
 {
   "name": "most-replay",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A memoization operator for most.js",
   "main": "index.js",
   "scripts": {

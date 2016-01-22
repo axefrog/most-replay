@@ -3,7 +3,7 @@
 This is a specialization of most.js' multicast operator. As with multicast, a single source is maintained, and the same data is emitted to multiple observers. Unlike multicast, all events are cached internally and transmitted to new observers before they receive subsequent events from the source. When the source terminates, the termination event is also recorded. New observers that connect after the original source terminates will be transmitted all of the cached events, followed by the same `end` or `error` event that the original source terminated with.
 
 **Note:** this module makes use of ES2015 syntax such as `let`, `const` and arrow functions. Use Babel or an equivalent transpiler if your distribution target does not support these.
-
+np
 ## Installation
 
 ```
@@ -15,7 +15,7 @@ npm install --save most-replay
 
 ```js
 var most = require('most');
-require('most-replay')(most); // Call only once, at the start of your application.
+require('most-replay'); // Call only once, at the start of your application.
 
 var memoizedStream = most
   .periodic(100, null)
